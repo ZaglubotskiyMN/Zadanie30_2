@@ -9,8 +9,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+
+import java.util.List;
+
 public class javatest {
-private WebDriver webDriver;
+public WebDriver webDriver;
 
 @Before
 public void start() {
@@ -63,14 +66,46 @@ public  void Sixthtask(){
 public void Seventhtask(){
     WebElement seventhtask = webDriver.findElement(By.id("table"));
     seventhtask.click();
+    addcompany("Company","Java++");
+    addcompany("Contact","Ivan Ivanov");
+    addcompany("Country","Russia");
+    WebElement buttonAdd = webDriver.findElement(By.xpath("//input[@value='Add']"));
+    countCompany(6);
+    buttonAdd.click();
+    countCompany(7);
+    selectcompany("Laughing Bacchus Winecellars");
+    selectcompany("Alfreds Futterkiste");
+    selectcompany("Magazzini Alimentari Riuniti");
+    WebElement buttondelete= webDriver.findElement(By.xpath("//input[@value='Delete']"));
+    buttondelete.click();
+    countCompany(4);
+    WebElement returnFirstClicMe = webDriver.findElement(By.linkText("Great! Return to menu"));
+    returnFirstClicMe.click();
+
 }
 
+private void countCompany(int actualsize){
+    List<WebElement> table =webDriver.findElements(By.tagName("th"));
+    int tableIndex = -1;
+    for (int i = 0;i< table.size();i++){
+        if(table.get(i).getText().equals("Company")){
+            tableIndex=i;
+        }
+    }
+    Assert.assertNotEquals(tableIndex,-1);
+    List<WebElement> company = webDriver.findElements(By.xpath("//td["+(tableIndex+1)+"]"));
+    Assert.assertEquals(actualsize,company.size());
 
+}
+private void addcompany(String labeltext,String value){
+    WebElement input = webDriver.findElement(By.xpath(".//label[text()='"+labeltext+"']//following::input"));
+    input.sendKeys(value);
+}
+private void selectcompany(String company){
+    WebElement select = webDriver.findElement(By.xpath(".//td[text()='"+company+"']//preceding-sibling::td/input"));
+    select.click();
 
-
-
-
-
+}
     @After
     public void teardown() throws InterruptedException {
         Thread.sleep(3000);
